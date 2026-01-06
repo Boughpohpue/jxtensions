@@ -1,2 +1,2 @@
 # jxtensions
-"Extension methods for javascript bilt-in types
+Extension methods for javascript bilt-in types
