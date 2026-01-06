@@ -19,15 +19,18 @@ const volData = new VolumeData(
   null
 );
 
-console.log("OBJECT UNDER TEST:")
-console.log(volData);
-console.log("\n\n\nRECURRENT:");
-console.log(volData.getStructureInfo());
-console.log("\n\nRECURRENT:");
-console.log(volData.getStructureInfo(false, true));
-console.log("\n\nRECURRENT + depth=0:");
-console.log(volData.getStructureInfo(false, true, 0));
-console.log("\n\nRECURRENT + depth=1:");
-console.log(volData.getStructureInfo(false, true, 1));
-console.log("\n\nRECURRENT + depth=2:");
-console.log(volData.getStructureInfo(false, true, 2));
+console.warn("OBJECT UNDER TEST:")
+console.log(JSON.stringify(volData, null, 3));
+
+console.warn("\n\n\nTesting...");
+
+console.warn("\n\nRECURRENT:");
+console.log(JSON.stringify(volData.getStructureInfo(), null, 3));
+console.warn("\n\nRECURRENT:");
+console.log(JSON.stringify(volData.getStructureInfo(false, true), null, 3));
+console.warn("\n\nRECURRENT + depth=0:");
+console.log(JSON.stringify(volData.getStructureInfo(false, true, 0), null, 3));
+console.warn("\n\nRECURRENT + depth=1:");
+console.log(JSON.stringify(volData.getStructureInfo(false, true, 1), null, 3));
+console.warn("\n\nRECURRENT + depth=2:");
+console.log(JSON.stringify(volData.getStructureInfo(false, true, 2), null, 3));
