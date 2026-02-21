@@ -2,55 +2,50 @@ export function extendArrayPrototype() {
   Object.defineProperty(Array.prototype, "isEmpty", {
     get: function () {
       return this.length === 0;
-    },
+    }
   });
   Object.defineProperty(Array.prototype, "first", {
     get: function () {
       return this.length === 0 ? null : this[0];
-    },
+    }
   });
   Object.defineProperty(Array.prototype, "last", {
     get: function () {
       return this.length === 0 ? null : this[this.length - 1];
-    },
+    }
   });
   Object.defineProperty(Array.prototype, "random", {
     get: function () {
       if (this.length === 0) return undefined;
       return this[Math.floor(Math.random() * this.length)];
-    },
+    }
   });
   Object.defineProperty(Array.prototype, "randomItem", {
     get: function () {
       if (this.length === 0) return undefined;
       let i = Math.floor(Math.random() * this.length);
       return { index: i, value: this[i] };
-    },
-  });
-  Object.defineProperty(Array.prototype, "itemType", {
-    get: function () {
-      return typeof this.find((e) => !!e);
-    },
+    }
   });
   Object.defineProperty(Array.prototype, "itemsTypes", {
     get: function () {
       return this.map((e) => (e === null ? "null" : typeof e));
-    },
+    }
   });
   Object.defineProperty(Array.prototype, "hasNullItem", {
     get: function () {
       return this.some((e) => e === null);
-    },
+    }
   });
   Object.defineProperty(Array.prototype, "hasArrayItem", {
     get: function () {
       return this.some((e) => Array.isArray(e));
-    },
+    }
   });
   Object.defineProperty(Array.prototype, "hasObjectItem", {
     get: function () {
       return this.some((e) => !!e && typeof e === "object");
-    },
+    }
   });
   Array.prototype.findArrayItem = function () {
     return this.find((e) => Array.isArray(e));
@@ -67,7 +62,7 @@ export function extendArrayPrototype() {
     }
     this.push(x);
   };
-  Array.prototype.putnique = function (x, key) {
+  Array.prototype.putniqueByKey = function (x, key) {
     if (!this.some((i) => i[key] == x[key])) {
       this.push(x);
     } else if (this.last[key] == x[key]) {
@@ -93,7 +88,7 @@ export function extendArrayPrototype() {
       this.push(x, ...temp.reverse());
     }
   };
-  Array.prototype.put = function (item, compareKey) {
+  Array.prototype.putByKey = function (item, compareKey) {
     if (this.isEmpty || this.last[compareKey] > item[compareKey]) {
       this.push(item);
     } else if (this.first[compareKey] < item[compareKey]) {

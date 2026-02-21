@@ -1,10 +1,8 @@
-export const codeStyleMap = new Map([["style", "color: goldenrod;"], ["breaklines", true]])
-
+export const codeStyleMap = new Map([["style", "color: goldenrod;"], ["breaklines", true]]);
 
 console.info('Defining test data...\n\n');
 
 console.warn("Test classes:");
-
 export class VolumeFormatStatus {
   constructor(id, name) {
     this.id = id;
@@ -34,5 +32,3 @@ export class VolumeData {
   }
 }
 console.log("\n%s", VolumeData.toString(), codeStyleMap);
-
-export default VolumeData;

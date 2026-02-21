@@ -3,43 +3,8 @@
 /* ================================================================================== */
 
 export function extendObjectPrototype() {
-  Object.prototype.isIstanceOf = function (c) {
+  Object.prototype.isInstanceOf = function (c) {
     return c.name === this.constructor.name;
-  };
-  Object.prototype.getPropertyNames = function () {
-    let keys = [];
-    for (let prop in this) {
-      keys.push(prop);
-    }
-    return keys;
-  };
-  Object.getObjectPropertyNames = function () {
-    let keys = [];
-    for (let prop in this.prototype) {
-      keys.push(prop);
-    }
-    return keys;
-  };
-  Object.prototype.getStaticPropertyNames = function () {
-    let keys = [];
-    for (let prop in this.constructor) {
-      keys.push(prop);
-    }
-    return keys;
-  };
-  Object.getStaticPropertyNames = function () {
-    let keys = [];
-    for (let prop in this) {
-      keys.push(prop);
-    }
-    return keys;
-  };
-  Object.getStaticInstanceNames = function () {
-    let keys = [];
-    for (let prop in this) {
-      keys.push(prop);
-    }
-    return keys;
   };
   Object.prototype.resolveProperty = function (path) {
     return path.split(".").reduce((acc, key) => (acc != null ? acc[key] : undefined), this);
@@ -48,7 +13,7 @@ export function extendObjectPrototype() {
     return Object.entries(this).flatMap(([key, value]) => {
       const path = prefix ? `${prefix}.${key}` : key;
       if (Array.isArray(value)) {
-        const firstElem = value.findObjectElement();
+        const firstElem = value.find((e) => !!e && typeof e === "object");
         return firstElem === undefined ? `${path}[]` : firstElem.getPaths(`${path}[]`);
       }
       return !value || typeof value !== "object" ? path : value.getPaths(path);
@@ -58,7 +23,7 @@ export function extendObjectPrototype() {
     if (Array.isArray(this)) {
       if (this.length === 0) return "Array<empty>";
 
-      let firstElem = this.find((e) => e !== null && e !== undefined); // this.findObjectItem();
+      let firstElem = this.find((e) => e !== null && e !== undefined);
       if (firstElem === null || firstElem === undefined) {
         return "Array<?>";
       } else if (typeof firstElem === "object") {
@@ -117,55 +82,50 @@ export function extendArrayPrototype() {
   Object.defineProperty(Array.prototype, "isEmpty", {
     get: function () {
       return this.length === 0;
-    },
+    }
   });
   Object.defineProperty(Array.prototype, "first", {
     get: function () {
       return this.length === 0 ? null : this[0];
-    },
+    }
   });
   Object.defineProperty(Array.prototype, "last", {
     get: function () {
       return this.length === 0 ? null : this[this.length - 1];
-    },
+    }
   });
   Object.defineProperty(Array.prototype, "random", {
     get: function () {
       if (this.length === 0) return undefined;
       return this[Math.floor(Math.random() * this.length)];
-    },
+    }
   });
   Object.defineProperty(Array.prototype, "randomItem", {
     get: function () {
       if (this.length === 0) return undefined;
       let i = Math.floor(Math.random() * this.length);
       return { index: i, value: this[i] };
-    },
-  });
-  Object.defineProperty(Array.prototype, "itemType", {
-    get: function () {
-      return typeof this.find((e) => !!e);
-    },
+    }
   });
   Object.defineProperty(Array.prototype, "itemsTypes", {
     get: function () {
       return this.map((e) => (e === null ? "null" : typeof e));
-    },
+    }
   });
   Object.defineProperty(Array.prototype, "hasNullItem", {
     get: function () {
       return this.some((e) => e === null);
-    },
+    }
   });
   Object.defineProperty(Array.prototype, "hasArrayItem", {
     get: function () {
       return this.some((e) => Array.isArray(e));
-    },
+    }
   });
   Object.defineProperty(Array.prototype, "hasObjectItem", {
     get: function () {
       return this.some((e) => !!e && typeof e === "object");
-    },
+    }
   });
   Array.prototype.findArrayItem = function () {
     return this.find((e) => Array.isArray(e));
@@ -182,7 +142,7 @@ export function extendArrayPrototype() {
     }
     this.push(x);
   };
-  Array.prototype.putnique = function (x, key) {
+  Array.prototype.putniqueByKey = function (x, key) {
     if (!this.some((i) => i[key] == x[key])) {
       this.push(x);
     } else if (this.last[key] == x[key]) {
@@ -208,7 +168,7 @@ export function extendArrayPrototype() {
       this.push(x, ...temp.reverse());
     }
   };
-  Array.prototype.put = function (item, compareKey) {
+  Array.prototype.putByKey = function (item, compareKey) {
     if (this.isEmpty || this.last[compareKey] > item[compareKey]) {
       this.push(item);
     } else if (this.first[compareKey] < item[compareKey]) {
@@ -257,24 +217,38 @@ export function extendArrayPrototype() {
 }
 
 export function extendDatePrototype() {
-  Date.prototype.addSeconds = function (s) {
-    this.setSeconds(this.getSeconds() + s);
-    return this;
+  Date.prototype.addSeconds = function (s, mutate = false) {
+    if (mutate) {
+      this.setSeconds(this.getSeconds() + s);
+      return this;
+    } else {
+      return new Date(this.getTime() + s * 1000);
+    }
   };
-
-  Date.prototype.addMinutes = function (m) {
-    this.setMinutes(this.getMinutes() + m);
-    return this;
+  Date.prototype.addMinutes = function (m, mutate = false) {
+    return this.addSeconds(m * 60, mutate);
   };
-
-  Date.prototype.addHours = function (h) {
-    this.setHours(this.getHours() + h);
-    return this;
+  Date.prototype.addHours = function (h, mutate = false) {
+    return this.addMinutes(h * 60, mutate);
   };
-
-  Date.prototype.addDays = function (d) {
-    this.setHours(this.getHours() + (d * 24));
-    return this;
+  Date.prototype.addDays = function (d, mutate = false) {
+    return this.addHours(d * 24, mutate);
+  };
+  Date.prototype.addMonths = function(m, mutate = false) {
+    const newDate = mutate ? this : new Date(this);
+    newDate.setMonth(newDate.getMonth() + m);
+    return newDate;
+  };
+  Date.prototype.addYears = function(y, mutate = false) {
+    const newDate = mutate ? this : new Date(this);
+    newDate.setFullYear(newDate.getFullYear() + y);
+    return newDate;
+  };
+  Date.prototype.clone = function() {
+    return new Date(this.getTime());
+  };
+  Date.prototype.format = function() {
+    return this.toISOString();
   };
 }
 
