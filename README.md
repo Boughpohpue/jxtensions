@@ -7,12 +7,37 @@ These extensions provide convenient methods for inspecting, manipulating, and tr
 
 ## Installation
 
-```bash
-# If using as a module
-import extendPrototypes from 'your-library-path';
-
-extendPrototypes(); // Extends Object, Array, and Date prototypes
+### Classic script link
+```html
+<script src="https://boughpohpue.github.io/jxtensions/compiled/jxtensions.js"></script>
+<script>extendPrototypes();</script>
 ```
+
+### ES module import
+```html
+<script type="module">
+    import 'https://boughpohpue.github.io/jxtensions/compiled/jxtensions.js';
+    extendPrototypes();
+</script>
+```
+
+```js
+import extendPrototypes from 'https://boughpohpue.github.io/jxtensions/compiled/jxtensions.js';
+extendPrototypes();
+```
+
+### Per type
+```js
+import extendArrayPrototype from 'https://boughpohpue.github.io/jxtensions/content/array.js';
+extendArrayPrototype();
+
+import extendDatePrototype from 'https://boughpohpue.github.io/jxtensions/content/date.js';
+extendDatePrototype();
+
+import extendObjectPrototype from 'https://boughpohpue.github.io/jxtensions/content/object.js';
+extendObjectPrototype();
+```
+
 
 ---
 
@@ -20,7 +45,7 @@ extendPrototypes(); // Extends Object, Array, and Date prototypes
 
 ### `isInstanceOf(c)`
 
-Check if an object is an instance of a class (by name).
+Check if an object is an instance of a class.
 
 ```js
 obj.isInstanceOf(MyClass); // true or false
@@ -30,7 +55,7 @@ obj.isInstanceOf(MyClass); // true or false
 
 ### `resolveProperty(path)`
 
-Resolve a nested property by string path (dot notation).
+Resolve (get value of) a nested property by string path (dot notation).
 
 ```js
 obj.resolveProperty('format.status.name');
